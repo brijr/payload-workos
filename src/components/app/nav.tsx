@@ -5,14 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Home } from 'lucide-react'
 import { Nav } from '@/components/ds'
 
-import { getUser } from '@/lib/auth'
-
 import Link from 'next/link'
 
-import type { User } from '@/payload-types'
-
 export const AppNav = async () => {
-  const _user: User | null = await getUser()
+  // User authentication is already handled by the admin layout
 
   return (
     <Nav

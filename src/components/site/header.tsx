@@ -6,12 +6,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Logo from '@/public/logo.svg'
 
-import { getUser } from '@/lib/auth'
-
-import type { User } from '@/payload-types'
+import { withAuth } from '@workos-inc/authkit-nextjs'
 
 export const Header = async () => {
-  const user: User | null = await getUser()
+  // Get WorkOS user (optional authentication check)
+  const { user } = await withAuth({ ensureSignedIn: false })
 
   return (
     <Nav
