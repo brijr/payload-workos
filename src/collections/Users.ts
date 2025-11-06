@@ -28,6 +28,31 @@ export const Users: CollectionConfig = {
       defaultValue: 'user',
     },
     {
+      name: 'workosId',
+      type: 'text',
+      unique: true,
+      index: true,
+      admin: {
+        description: 'WorkOS user ID for authentication',
+        readOnly: true,
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'authProvider',
+      type: 'select',
+      options: [
+        { label: 'WorkOS', value: 'workos' },
+        { label: 'Payload', value: 'payload' },
+        { label: 'Both', value: 'both' },
+      ],
+      defaultValue: 'payload',
+      admin: {
+        description: 'Authentication provider for this user',
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'emailVerified',
       type: 'checkbox',
       defaultValue: false,

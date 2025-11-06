@@ -1,9 +1,13 @@
+/**
+ * Admin Layout
+ *
+ * Protected layout that requires WorkOS authentication
+ * Syncs WorkOS users to Payload on each visit
+ */
+
 import { AppNav } from '@/components/app/nav'
-
-import { redirect } from 'next/navigation'
-import { getUser } from '@/lib/auth'
-
-import type { User } from '@/payload-types'
+import { withAuth } from '@workos-inc/authkit-nextjs'
+import { syncWorkOSUserToPayload } from '@/lib/workos-sync'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,10 +16,22 @@ type AuthLayoutProps = {
 }
 
 export default async function AuthLayout({ children }: AuthLayoutProps) {
-  const user: User | null = await getUser()
+  // Ensure user is signed in with WorkOS
+  const { user: workosUser } = await withAuth({ ensureSignedIn: true })
 
-  if (!user) {
-    redirect('/login')
+  // Sync WorkOS user to Payload
+  try {
+    await syncWorkOSUserToPayload({
+      id: workosUser.id,
+      email: workosUser.email,
+      firstName: workosUser.firstName,
+      lastName: workosUser.lastName,
+      emailVerified: workosUser.emailVerified,
+      profilePictureUrl: workosUser.profilePictureUrl,
+    })
+  } catch (error) {
+    console.error('Error syncing user to Payload:', error)
+    // Continue rendering even if sync fails
   }
 
   return (

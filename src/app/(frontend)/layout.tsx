@@ -5,6 +5,7 @@ import { Geist_Mono as FontMono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
+import { AuthKitProvider } from '@workos-inc/authkit-nextjs/components'
 
 import { cn } from '@/lib/utils'
 
@@ -45,15 +46,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className={cn('flex flex-col min-h-screen', fontSans.className)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors expand={true} closeButton />
-        </ThemeProvider>
+        <AuthKitProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster richColors expand={true} closeButton />
+          </ThemeProvider>
+        </AuthKitProvider>
         <Analytics />
       </body>
     </html>

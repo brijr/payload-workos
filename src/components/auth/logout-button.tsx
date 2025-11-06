@@ -1,9 +1,13 @@
+/**
+ * Logout Button Components
+ *
+ * Client-side logout buttons that use WorkOS signOut functionality
+ */
+
 'use client'
 
 import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
-
-import { clearAuthCookies } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -16,14 +20,17 @@ export const LogoutButton = () => {
     setIsLoading(true)
 
     try {
-      const result = await clearAuthCookies()
+      // Call the WorkOS sign-out endpoint
+      const response = await fetch('/api/auth/signout', {
+        method: 'POST',
+      })
 
-      if (result.success) {
+      if (response.ok) {
         toast.success('Logged out successfully', {
           description: 'You have been signed out of your account.',
         })
         router.push('/')
-        router.refresh() // Refresh to clear any cached user state
+        router.refresh()
       } else {
         toast.error('Logout failed', {
           description: 'Please try again.',
@@ -46,12 +53,30 @@ export const LogoutButton = () => {
 }
 
 export const LogoutIconButton = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+
   const handleLogout = async () => {
-    await clearAuthCookies()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/auth/signout', {
+        method: 'POST',
+      })
+
+      if (response.ok) {
+        router.push('/')
+        router.refresh()
+      }
+    } catch (_error) {
+      // Silent fail for icon button
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <Button variant="outline" size="icon" onClick={handleLogout}>
+    <Button variant="outline" size="icon" onClick={handleLogout} disabled={isLoading}>
       <LogOut />
     </Button>
   )
