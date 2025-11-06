@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  payload:
+    image: node:18-alpine
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    working_dir: /home/node/app/
+    command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
+    depends_on:
+      - postgres
+    env_file:
+      - .env.docker
+
+  postgres:
+    restart: always
+    image: postgres:15-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: payload
+
+volumes:
+  pgdata:
+  node_modules:
