@@ -1,7 +1,4 @@
-import { Section, Container } from '@/components/ds'
-import { RegisterForm } from '@/components/auth/register-form'
-import { AuthBox } from '@/components/auth/auth-box'
-import { withAuth } from '@workos-inc/authkit-nextjs'
+import { withAuth, getSignUpUrl } from '@workos-inc/authkit-nextjs'
 import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
@@ -15,17 +12,7 @@ export default async function RegisterPage() {
     redirect('/dashboard')
   }
 
-  return (
-    <Section>
-      <Container>
-        <AuthBox>
-          <h1>Sign Up</h1>
-          <p className="text-muted-foreground text-sm mb-4">
-            Create an account to get started
-          </p>
-          <RegisterForm />
-        </AuthBox>
-      </Container>
-    </Section>
-  )
+  // Get WorkOS sign-up URL and redirect
+  const signUpUrl = await getSignUpUrl()
+  redirect(signUpUrl)
 }

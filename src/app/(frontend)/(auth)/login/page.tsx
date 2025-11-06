@@ -1,7 +1,4 @@
-import { Section, Container } from '@/components/ds'
-import { LoginForm } from '@/components/auth/login-form'
-import { AuthBox } from '@/components/auth/auth-box'
-import { withAuth } from '@workos-inc/authkit-nextjs'
+import { withAuth, getSignInUrl } from '@workos-inc/authkit-nextjs'
 import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
@@ -15,17 +12,7 @@ export default async function LoginPage() {
     redirect('/dashboard')
   }
 
-  return (
-    <Section>
-      <Container>
-        <AuthBox>
-          <h1>Login</h1>
-          <p className="text-muted-foreground text-sm mb-4">
-            Sign in to access your dashboard
-          </p>
-          <LoginForm />
-        </AuthBox>
-      </Container>
-    </Section>
-  )
+  // Get WorkOS sign-in URL and redirect
+  const signInUrl = await getSignInUrl()
+  redirect(signInUrl)
 }
