@@ -20,8 +20,6 @@ export default authkitMiddleware({
       '/login',              // Login page
       '/register',           // Register page
       '/callback',           // OAuth callback
-      '/api/*',              // API routes (handle auth separately)
-      '/_next/*',            // Next.js internal routes
       '/favicon.ico',        // Favicon
       '/opengraph-image.jpg', // OpenGraph image
       '/twitter-image.jpg',  // Twitter image
@@ -42,7 +40,7 @@ export default authkitMiddleware({
  * - Includes all routes
  * - Excludes Next.js static files
  * - Excludes Payload admin routes (they use Payload auth)
- * - Excludes Payload API routes
+ * - Excludes API routes
  */
 export const config = {
   matcher: [
@@ -51,9 +49,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico
-     * - public files (images, etc.)
-     * - /admin/* (Payload CMS admin - uses Payload auth)
+     * - api/* (API routes)
+     * - admin/* (Payload CMS admin - uses Payload auth)
      */
-    '/((?!_next/static|_next/image|favicon.ico|admin).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api|admin).*)',
   ],
 }
